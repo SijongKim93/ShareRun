@@ -30,7 +30,7 @@ class RunningManager {
     }
     
     func updateCurrentSession(newLocation: CLLocation) {
-        guard var session = currentSession.value else { return }
+        guard let session = currentSession.value else { return }
         
         //update location
         var locations = session.locations.value
