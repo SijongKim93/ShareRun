@@ -18,12 +18,14 @@
 		4D27D6262C787C7400C69DC1 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 4D27D6252C787C7400C69DC1 /* Alamofire */; };
 		4D27D6292C787C7D00C69DC1 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 4D27D6282C787C7D00C69DC1 /* Kingfisher */; };
 		4D27D62C2C787C9300C69DC1 /* RunningSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D27D62B2C787C9300C69DC1 /* RunningSession.swift */; };
-		4D27D6342C787D4100C69DC1 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 4D27D6332C787D4100C69DC1 /* RxCocoa */; };
-		4D27D6362C787D4100C69DC1 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 4D27D6352C787D4100C69DC1 /* RxRelay */; };
-		4D27D6382C787D4100C69DC1 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 4D27D6372C787D4100C69DC1 /* RxSwift */; };
-		4D27D63A2C787D4100C69DC1 /* RxTest in Frameworks */ = {isa = PBXBuildFile; productRef = 4D27D6392C787D4100C69DC1 /* RxTest */; };
 		4D27D63D2C787ECF00C69DC1 /* RunningManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D27D63C2C787ECF00C69DC1 /* RunningManager.swift */; };
 		4D27D63F2C7AFDE900C69DC1 /* RunningViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D27D63E2C7AFDE900C69DC1 /* RunningViewModel.swift */; };
+		4D27D6442C7C228F00C69DC1 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 4D27D6432C7C228F00C69DC1 /* RxCocoa */; };
+		4D27D6462C7C228F00C69DC1 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 4D27D6452C7C228F00C69DC1 /* RxRelay */; };
+		4D27D6482C7C228F00C69DC1 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 4D27D6472C7C228F00C69DC1 /* RxSwift */; };
+		4D27D64C2C7C43E700C69DC1 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D27D64B2C7C43E700C69DC1 /* ShareViewController.swift */; };
+		4D27D64E2C7C43F800C69DC1 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D27D64D2C7C43F800C69DC1 /* ScheduleViewController.swift */; };
+		4D27D6502C7C440F00C69DC1 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D27D64F2C7C440F00C69DC1 /* SettingsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +41,9 @@
 		4D27D62B2C787C9300C69DC1 /* RunningSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningSession.swift; sourceTree = "<group>"; };
 		4D27D63C2C787ECF00C69DC1 /* RunningManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningManager.swift; sourceTree = "<group>"; };
 		4D27D63E2C7AFDE900C69DC1 /* RunningViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningViewModel.swift; sourceTree = "<group>"; };
+		4D27D64B2C7C43E700C69DC1 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		4D27D64D2C7C43F800C69DC1 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
+		4D27D64F2C7C440F00C69DC1 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,12 +51,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4D27D63A2C787D4100C69DC1 /* RxTest in Frameworks */,
-				4D27D6382C787D4100C69DC1 /* RxSwift in Frameworks */,
-				4D27D6362C787D4100C69DC1 /* RxRelay in Frameworks */,
+				4D27D6482C7C228F00C69DC1 /* RxSwift in Frameworks */,
+				4D27D6462C7C228F00C69DC1 /* RxRelay in Frameworks */,
 				4D27D6292C787C7D00C69DC1 /* Kingfisher in Frameworks */,
 				4D27D6222C787C4200C69DC1 /* SnapKit in Frameworks */,
-				4D27D6342C787D4100C69DC1 /* RxCocoa in Frameworks */,
+				4D27D6442C7C228F00C69DC1 /* RxCocoa in Frameworks */,
 				4D27D6262C787C7400C69DC1 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -112,7 +116,10 @@
 		4D27D6402C7AFDF700C69DC1 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				4D27D64B2C7C43E700C69DC1 /* ShareViewController.swift */,
 				4D27D60D2C7879FC00C69DC1 /* RunningViewController.swift */,
+				4D27D64D2C7C43F800C69DC1 /* ScheduleViewController.swift */,
+				4D27D64F2C7C440F00C69DC1 /* SettingsViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -145,10 +152,9 @@
 				4D27D6212C787C4200C69DC1 /* SnapKit */,
 				4D27D6252C787C7400C69DC1 /* Alamofire */,
 				4D27D6282C787C7D00C69DC1 /* Kingfisher */,
-				4D27D6332C787D4100C69DC1 /* RxCocoa */,
-				4D27D6352C787D4100C69DC1 /* RxRelay */,
-				4D27D6372C787D4100C69DC1 /* RxSwift */,
-				4D27D6392C787D4100C69DC1 /* RxTest */,
+				4D27D6432C7C228F00C69DC1 /* RxCocoa */,
+				4D27D6452C7C228F00C69DC1 /* RxRelay */,
+				4D27D6472C7C228F00C69DC1 /* RxSwift */,
 			);
 			productName = ShareRun;
 			productReference = 4D27D6062C7879FC00C69DC1 /* ShareRun.app */;
@@ -182,7 +188,7 @@
 				4D27D6202C787C4200C69DC1 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				4D27D6242C787C7400C69DC1 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				4D27D6272C787C7D00C69DC1 /* XCRemoteSwiftPackageReference "Kingfisher" */,
-				4D27D6322C787D4100C69DC1 /* XCRemoteSwiftPackageReference "RxSwift" */,
+				4D27D6422C7C228F00C69DC1 /* XCRemoteSwiftPackageReference "RxSwift" */,
 			);
 			productRefGroup = 4D27D6072C7879FC00C69DC1 /* Products */;
 			projectDirPath = "";
@@ -214,9 +220,12 @@
 				4D27D60E2C7879FC00C69DC1 /* RunningViewController.swift in Sources */,
 				4D27D6142C7879FC00C69DC1 /* ShareRun.xcdatamodeld in Sources */,
 				4D27D62C2C787C9300C69DC1 /* RunningSession.swift in Sources */,
+				4D27D6502C7C440F00C69DC1 /* SettingsViewController.swift in Sources */,
+				4D27D64E2C7C43F800C69DC1 /* ScheduleViewController.swift in Sources */,
 				4D27D63F2C7AFDE900C69DC1 /* RunningViewModel.swift in Sources */,
 				4D27D63D2C787ECF00C69DC1 /* RunningManager.swift in Sources */,
 				4D27D60A2C7879FC00C69DC1 /* AppDelegate.swift in Sources */,
+				4D27D64C2C7C43E700C69DC1 /* ShareViewController.swift in Sources */,
 				4D27D60C2C7879FC00C69DC1 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -468,7 +477,7 @@
 				minimumVersion = 7.12.0;
 			};
 		};
-		4D27D6322C787D4100C69DC1 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+		4D27D6422C7C228F00C69DC1 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ReactiveX/RxSwift";
 			requirement = {
@@ -494,25 +503,20 @@
 			package = 4D27D6272C787C7D00C69DC1 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
 		};
-		4D27D6332C787D4100C69DC1 /* RxCocoa */ = {
+		4D27D6432C7C228F00C69DC1 /* RxCocoa */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4D27D6322C787D4100C69DC1 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			package = 4D27D6422C7C228F00C69DC1 /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxCocoa;
 		};
-		4D27D6352C787D4100C69DC1 /* RxRelay */ = {
+		4D27D6452C7C228F00C69DC1 /* RxRelay */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4D27D6322C787D4100C69DC1 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			package = 4D27D6422C7C228F00C69DC1 /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxRelay;
 		};
-		4D27D6372C787D4100C69DC1 /* RxSwift */ = {
+		4D27D6472C7C228F00C69DC1 /* RxSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4D27D6322C787D4100C69DC1 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			package = 4D27D6422C7C228F00C69DC1 /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxSwift;
-		};
-		4D27D6392C787D4100C69DC1 /* RxTest */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4D27D6322C787D4100C69DC1 /* XCRemoteSwiftPackageReference "RxSwift" */;
-			productName = RxTest;
 		};
 /* End XCSwiftPackageProductDependency section */
 
