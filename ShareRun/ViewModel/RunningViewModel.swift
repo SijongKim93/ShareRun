@@ -50,8 +50,12 @@ class RunningViewModel {
         duration = runningManager.currentSession
             .compactMap { $0?.duration }
             .flatMap { $0.asObservable() }
-            .map { String(format: "%.2f s", $0) }
-            .asDriver(onErrorJustReturn: "00:00:00")
+            .map { duration in
+                let minutes = Int(duration) / 60
+                let seconds = Int(duration) % 60
+                return String(format: "%02d분 %02d초", minutes, seconds)
+            }
+            .asDriver(onErrorJustReturn: "00분 00초")
         
         startStopButtonTitle = sessionStateRelay.map { state in
             state == .stopped ? "Start" : "Stop"
