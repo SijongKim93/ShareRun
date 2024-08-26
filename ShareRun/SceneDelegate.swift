@@ -13,12 +13,35 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+        
+        let window = UIWindow(windowScene: windowScene)
+        window.rootViewController = setupTabBarController()
+        self.window = window
+        window.makeKeyAndVisible()
     }
-
+    
+    func setupTabBarController() -> UITabBarController {
+        let tabBarController = UITabBarController()
+        
+        let shareVC = ShareViewController()
+        shareVC.tabBarItem = UITabBarItem(title: "Share", image: UIImage(systemName: "shareplay"), tag: 0)
+        
+        let runningVC = RunningViewController()
+        runningVC.tabBarItem = UITabBarItem(title: "Running", image: UIImage(systemName: "figure.run"), tag: 1)
+        
+        let scheduleVC = ScheduleViewController()
+        scheduleVC.tabBarItem = UITabBarItem(title: "Schedule", image: UIImage(systemName: "calendar"), tag: 2)
+        
+        let settingVC = SettingsViewController()
+        settingVC.tabBarItem = UITabBarItem(title: "Setting", image: UIImage(systemName: "gear"), tag: 3)
+        
+        tabBarController.viewControllers = [shareVC, runningVC, scheduleVC, settingVC]
+        
+        return tabBarController
+    }
+    
+    
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
         // This occurs shortly after the scene enters the background, or when its session is discarded.

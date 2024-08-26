@@ -32,14 +32,19 @@ class RunningViewController: UIViewController {
     
     private let startStopButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Start", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 24, weight: .semibold)
+        return button
+    }()
+    
+    private let pauseResumeButton: UIButton = {
+        let button = UIButton(type: .system)
         button.titleLabel?.font = .systemFont(ofSize: 24, weight: .semibold)
         return button
     }()
     
     lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [distanceLabel, timeLabel, startStopButton])
-        stackView.axis = .vertical // 수직 방향으로 변경
+        let stackView = UIStackView(arrangedSubviews: [distanceLabel, timeLabel, startStopButton, pauseResumeButton])
+        stackView.axis = .vertical
         stackView.spacing = 20
         return stackView
     }()
@@ -47,11 +52,13 @@ class RunningViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.backgroundColor = .white
+        
         setupUI()
-        setupBindings() // Binding 설정 추가
-        setupLocationManager() // 위치 업데이트를 위해 추가
+        setupBindings()
+        setupLocationManager()
     }
-
+    
     private func setupUI() {
         view.addSubview(stackView)
         
@@ -65,6 +72,10 @@ class RunningViewController: UIViewController {
             .bind(to: viewModel.startStopTrigger)
             .disposed(by: disposeBag)
         
+        pauseResumeButton.rx.tap
+            .bind(to: viewModel.pauseResumeTrigger)
+            .disposed(by: disposeBag)
+        
         viewModel.distance
             .drive(distanceLabel.rx.text)
             .disposed(by: disposeBag)
@@ -73,13 +84,21 @@ class RunningViewController: UIViewController {
             .drive(timeLabel.rx.text)
             .disposed(by: disposeBag)
         
-        viewModel.buttonTitle
+        viewModel.startStopButtonTitle
             .drive(startStopButton.rx.title())
             .disposed(by: disposeBag)
         
-        viewModel.isRunning
-            .drive(onNext: { [weak self] isRunning in
-                if isRunning {
+        viewModel.pauseResumeButtonTitle
+            .drive(pauseResumeButton.rx.title())
+            .disposed(by: disposeBag)
+        
+        viewModel.isPauseResumeButtonHidden
+            .drive(pauseResumeButton.rx.isHidden)
+            .disposed(by: disposeBag)
+        
+        viewModel.sessionState
+            .drive(onNext: { [weak self] state in
+                if state == .running {
                     self?.startUpdatingLocation()
                 } else {
                     self?.locationManager.stopUpdatingLocation()
@@ -97,11 +116,44 @@ class RunningViewController: UIViewController {
     private func startUpdatingLocation() {
         locationManager.startUpdatingLocation()
     }
+    
+    private func checkLocationAuthorization() {
+        switch locationManager.authorizationStatus {
+        case .notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+        case .restricted, .denied:
+            promptForLocationService()
+        case .authorizedWhenInUse, .authorizedAlways:
+            startUpdatingLocation()
+        @unknown default:
+            break
+        }
+    }
+    
+    private func promptForLocationService() {
+        let alert = UIAlertController(title: "Location Permission Required",
+                                      message: "Please enable location services in the settings.",
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { _ in
+            guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
+                return
+            }
+            if UIApplication.shared.canOpenURL(settingsUrl) {
+                UIApplication.shared.open(settingsUrl)
+            }
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        present(alert, animated: true)
+    }
 }
 
 extension RunningViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
         viewModel.locationUpdate.accept(location)
+    }
+    
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        checkLocationAuthorization()
     }
 }
