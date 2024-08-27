@@ -20,6 +20,7 @@ class RunningViewModel {
     private let disposeBag = DisposeBag()
     private let runningManager: RunningManager
     
+    
     // Input
     let startStopTrigger = PublishRelay<Void>()
     let pauseResumeTrigger = PublishRelay<Void>()
@@ -27,7 +28,15 @@ class RunningViewModel {
     
     // Output
     let distance: Driver<String>
-    let duration: Driver<String>
+    lazy var duration: Driver<String> = {
+        return Observable<Int>.interval(.seconds(1), scheduler: MainScheduler.instance)
+            .map { _ in
+                let minutes = Int(self.durationTime) / 60
+                let seconds = Int(self.durationTime) % 60
+                return String(format: "%02d분 %02d초", minutes, seconds)
+            }
+            .asDriver(onErrorJustReturn: "00분 00초")
+    }()
     let sessionState: Driver<SessionState>
     let startStopButtonTitle: Driver<String>
     let pauseResumeButtonTitle: Driver<String>
@@ -35,6 +44,8 @@ class RunningViewModel {
     let isStopButtonHidden: Driver<Bool>
     
     private let sessionStateRelay = BehaviorRelay<SessionState>(value: .stopped)
+    private var timer: Timer?
+    private var durationTime: TimeInterval = 0
     
     init(runningManager: RunningManager = .shared) {
         self.runningManager = runningManager
@@ -46,16 +57,7 @@ class RunningViewModel {
             .flatMap { $0.asObservable() }
             .map { String(format: "%.2f km", $0) }
             .asDriver(onErrorJustReturn: "0.00 km")
-        
-        duration = runningManager.currentSession
-            .compactMap { $0?.duration }
-            .flatMap { $0.asObservable() }
-            .map { duration in
-                let minutes = Int(duration) / 60
-                let seconds = Int(duration) % 60
-                return String(format: "%02d분 %02d초", minutes, seconds)
-            }
-            .asDriver(onErrorJustReturn: "00분 00초")
+            .startWith("0.00 km")
         
         startStopButtonTitle = sessionStateRelay.map { state in
             state == .stopped ? "Start" : "Stop"
@@ -112,25 +114,38 @@ class RunningViewModel {
     private func startSession() {
         runningManager.startNewSession()
         sessionStateRelay.accept(.running)
+        startTimer()
     }
     
     private func pauseSession() {
         sessionStateRelay.accept(.paused)
+        stopTimer()
     }
     
     private func resumeSession() {
         sessionStateRelay.accept(.running)
+        startTimer()
     }
     
     private func stopSession() {
         runningManager.endCurrentSession()
         sessionStateRelay.accept(.stopped)
+        stopTimer()
+        resetTimer()
     }
     
-    private func formatDuration(_ duration: TimeInterval) -> String {
-        let hours = Int(duration) / 3600
-        let minutes = (Int(duration) % 3600) / 60
-        let seconds = Int(duration) % 60
-        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+    private func startTimer() {
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            self?.durationTime += 1
+        }
+    }
+    
+    private func stopTimer() {
+        timer?.invalidate()
+    }
+    
+    private func resetTimer() {
+        durationTime = 0
     }
 }
