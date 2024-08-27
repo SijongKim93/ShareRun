@@ -34,19 +34,35 @@ class RunningViewController: UIViewController {
     }()
     
     private let distanceLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 48, weight: .bold)
-        label.textColor = .black
-        label.textAlignment = .center
-        return label
+        return LabelFactory.createRunningLabel(fontSize: 40, weight: .bold, textColor: .black, textAlignment: .center)
+    }()
+    
+    private let distanceSubLabel: UILabel = {
+        return LabelFactory.createRunningLabel(fontSize: 30, weight: .semibold, textColor: .gray, textAlignment: .center, title: "KM")
     }()
     
     private let timeLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 36, weight: .medium)
-        label.textColor = .black
-        label.textAlignment = .center
-        return label
+        return LabelFactory.createRunningLabel(fontSize: 40, weight: .bold, textColor: .black, textAlignment: .center)
+    }()
+    
+    private let timeSubLabel: UILabel = {
+        return LabelFactory.createRunningLabel(fontSize: 30, weight: .semibold, textColor: .gray, textAlignment: .center, title: "TIME")
+    }()
+    
+    private let paceLabel: UILabel = {
+        return LabelFactory.createRunningLabel(fontSize: 40, weight: .bold, textColor: .black, textAlignment: .center)
+    }()
+    
+    private let paceSubLabel: UILabel = {
+        return LabelFactory.createRunningLabel(fontSize: 30, weight: .semibold, textColor: .gray, textAlignment: .center, title: "PACE")
+    }()
+    
+    private let bpmLabel: UILabel = {
+        return LabelFactory.createRunningLabel(fontSize: 40, weight: .bold, textColor: .black, textAlignment: .center)
+    }()
+    
+    private let bpmSubLabel: UILabel = {
+        return LabelFactory.createRunningLabel(fontSize: 30, weight: .semibold, textColor: .gray, textAlignment: .center, title: "BPM")
     }()
     
     private let startStopButton: UIButton = {
@@ -61,12 +77,6 @@ class RunningViewController: UIViewController {
         return button
     }()
     
-    lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [distanceLabel, timeLabel, startStopButton, pauseResumeButton])
-        stackView.axis = .vertical
-        stackView.spacing = 30
-        return stackView
-    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,7 +97,7 @@ class RunningViewController: UIViewController {
     private func setupUI() {
         view.addSubview(mapView)
         view.addSubview(gradientView)
-        view.addSubview(stackView)
+        
         
         mapView.snp.makeConstraints {
             $0.top.leading.trailing.equalToSuperview()
@@ -98,10 +108,7 @@ class RunningViewController: UIViewController {
             $0.edges.equalTo(mapView)
         }
         
-        stackView.snp.makeConstraints {
-            $0.top.equalTo(mapView.snp.bottom).offset(20)
-            $0.leading.trailing.equalToSuperview().inset(20)
-        }
+        
         
         addGradientLayer()
     }

@@ -55,9 +55,9 @@ class RunningViewModel {
         distance = runningManager.currentSession
             .compactMap { $0?.distance }
             .flatMap { $0.asObservable() }
-            .map { String(format: "%.2f km", $0) }
-            .asDriver(onErrorJustReturn: "0.00 km")
-            .startWith("0.00 km")
+            .map { String(format: "%.2f", $0) }
+            .asDriver(onErrorJustReturn: "0.00")
+            .startWith("0.00")
         
         startStopButtonTitle = sessionStateRelay.map { state in
             state == .stopped ? "Start" : "Stop"
