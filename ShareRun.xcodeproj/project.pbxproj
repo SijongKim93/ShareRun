@@ -26,6 +26,7 @@
 		4D27D64C2C7C43E700C69DC1 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D27D64B2C7C43E700C69DC1 /* ShareViewController.swift */; };
 		4D27D64E2C7C43F800C69DC1 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D27D64D2C7C43F800C69DC1 /* ScheduleViewController.swift */; };
 		4D27D6502C7C440F00C69DC1 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D27D64F2C7C440F00C69DC1 /* SettingsViewController.swift */; };
+		4D27D6532C7DFAAB00C69DC1 /* LabelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D27D6522C7DFAAB00C69DC1 /* LabelFactory.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +45,7 @@
 		4D27D64B2C7C43E700C69DC1 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		4D27D64D2C7C43F800C69DC1 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 		4D27D64F2C7C440F00C69DC1 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		4D27D6522C7DFAAB00C69DC1 /* LabelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelFactory.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +86,7 @@
 			children = (
 				4D27D6092C7879FC00C69DC1 /* AppDelegate.swift */,
 				4D27D60B2C7879FC00C69DC1 /* SceneDelegate.swift */,
+				4D27D6512C7DFA8900C69DC1 /* Factory */,
 				4D27D6402C7AFDF700C69DC1 /* View */,
 				4D27D6412C7AFE0F00C69DC1 /* ViewModel */,
 				4D27D63B2C787EB600C69DC1 /* Manager */,
@@ -130,6 +133,14 @@
 				4D27D63E2C7AFDE900C69DC1 /* RunningViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		4D27D6512C7DFA8900C69DC1 /* Factory */ = {
+			isa = PBXGroup;
+			children = (
+				4D27D6522C7DFAAB00C69DC1 /* LabelFactory.swift */,
+			);
+			path = Factory;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -220,6 +231,7 @@
 				4D27D60E2C7879FC00C69DC1 /* RunningViewController.swift in Sources */,
 				4D27D6142C7879FC00C69DC1 /* ShareRun.xcdatamodeld in Sources */,
 				4D27D62C2C787C9300C69DC1 /* RunningSession.swift in Sources */,
+				4D27D6532C7DFAAB00C69DC1 /* LabelFactory.swift in Sources */,
 				4D27D6502C7C440F00C69DC1 /* SettingsViewController.swift in Sources */,
 				4D27D64E2C7C43F800C69DC1 /* ScheduleViewController.swift in Sources */,
 				4D27D63F2C7AFDE900C69DC1 /* RunningViewModel.swift in Sources */,
