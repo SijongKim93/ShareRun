@@ -22,7 +22,7 @@ class RunningViewController: UIViewController {
     
     private let mapView: MKMapView = {
         let mapView = MKMapView()
-        mapView.mapType = .mutedStandard
+        mapView.mapType = .standard
         mapView.showsUserLocation = true
         mapView.userTrackingMode = .follow
         return mapView
@@ -79,6 +79,11 @@ class RunningViewController: UIViewController {
         setupLocationManager()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        addGradientLayer()
+    }
+    
     private func setupUI() {
         view.addSubview(mapView)
         view.addSubview(gradientView)
@@ -99,15 +104,16 @@ class RunningViewController: UIViewController {
         }
         
         addGradientLayer()
-        
-        
     }
     
     private func addGradientLayer() {
+        gradientView.layer.sublayers?.forEach { $0.removeFromSuperlayer() }
+        
         let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = mapView.bounds
-        gradientLayer.colors = [UIColor.clear.cgColor, view.backgroundColor?.cgColor ?? UIColor.white.cgColor]
-        gradientLayer.locations = [0.7, 1.0]
+        gradientLayer.frame = gradientView.bounds
+        gradientLayer.colors = [UIColor.clear.cgColor, UIColor.white.cgColor]
+        gradientLayer.locations = [0.0, 1.0]
+        
         gradientView.layer.addSublayer(gradientLayer)
     }
     
@@ -158,6 +164,7 @@ class RunningViewController: UIViewController {
     private func setupLocationManager() {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.distanceFilter = kCLDistanceFilterNone
         locationManager.requestWhenInUseAuthorization()
     }
     
