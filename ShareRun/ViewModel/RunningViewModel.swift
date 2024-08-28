@@ -10,6 +10,7 @@ import RxSwift
 import RxCocoa
 import CoreLocation
 import HealthKit
+import AVFoundation
 
 
 enum SessionState {
@@ -22,19 +23,21 @@ class RunningViewModel {
     private let disposeBag = DisposeBag()
     private let runningManager: RunningManager
     private let healthStore = HKHealthStore()
+    private let speechSynthesizer = AVSpeechSynthesizer()
     
     // Input
     let startStopTrigger = PublishRelay<Void>()
     let pauseResumeTrigger = PublishRelay<Void>()
     let locationUpdate = PublishRelay<CLLocation>()
     
-    
     // Output
     let distance: Driver<String>
-    private let bpmRelay = BehaviorRelay<String>(value: "---")
-    lazy var bpm: Driver<String> = bpmRelay.asDriver(onErrorJustReturn: "---")
+    let countdownText = BehaviorRelay<String?>(value: nil)
+    let showCountdown = PublishRelay<Bool>()
+    let bpm: Driver<String>
+    
     lazy var pace: Driver<String> = {
-        return runningManager.currentSession
+        return self.runningManager.currentSession
             .compactMap { $0?.distance }
             .flatMap { $0.asObservable() }
             .map { [weak self] distance in
@@ -48,10 +51,10 @@ class RunningViewModel {
             .startWith("00:00")
             .asDriver(onErrorJustReturn: "00:00")
     }()
-    
     lazy var duration: Driver<String> = {
         return Observable<Int>.interval(.seconds(1), scheduler: MainScheduler.instance)
-            .map { _ in
+            .map { [weak self] _ in
+                guard let self = self else { return "00:00" }
                 let minutes = Int(self.durationTime) / 60
                 let seconds = Int(self.durationTime) % 60
                 return String(format: "%02d:%02d", minutes, seconds)
@@ -59,19 +62,19 @@ class RunningViewModel {
             .startWith("00:00")
             .asDriver(onErrorJustReturn: "00:00")
     }()
-    
     let sessionState: Driver<SessionState>
     let sessionStateRelay = BehaviorRelay<SessionState>(value: .stopped)
     
     private var timer: Timer?
     private var durationTime: TimeInterval = 0
     private var heartRateQuery: HKQuery?
-    
+    private let bpmRelay = BehaviorRelay<String>(value: "---")
+
     init(runningManager: RunningManager = .shared) {
         self.runningManager = runningManager
         
         sessionState = sessionStateRelay.asDriver()
-        
+
         distance = runningManager.currentSession
             .compactMap { $0?.distance }
             .flatMap { $0.asObservable() }
@@ -79,23 +82,25 @@ class RunningViewModel {
             .startWith("0.00")
             .asDriver(onErrorJustReturn: "0.00")
         
+        bpm = bpmRelay.asDriver(onErrorJustReturn: "---")
+        
         setupBindings()
         requestHealthKitAuthorization()
     }
-    
+
     private func setupBindings() {
         startStopTrigger
             .withLatestFrom(sessionStateRelay)
             .subscribe(onNext: { [weak self] state in
                 guard let self = self else { return }
                 if state == .stopped {
-                    self.startSession()
+                    self.startCountdown()
                 } else {
                     self.stopSession()
                 }
             })
             .disposed(by: disposeBag)
-        
+
         pauseResumeTrigger
             .withLatestFrom(sessionStateRelay)
             .subscribe(onNext: { [weak self] state in
@@ -107,7 +112,7 @@ class RunningViewModel {
                 }
             })
             .disposed(by: disposeBag)
-        
+
         locationUpdate
             .withLatestFrom(sessionStateRelay) { ($0, $1) }
             .filter { _, state in state == .running }
@@ -118,45 +123,69 @@ class RunningViewModel {
             .disposed(by: disposeBag)
     }
     
+    private func startCountdown() {
+        let countdownNumbers = ["3", "2", "1", "GO"]
+        var delay: TimeInterval = 0
+        
+        showCountdown.accept(true)
+        
+        for number in countdownNumbers {
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                self.countdownText.accept(number)
+            }
+            delay += 1.0
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+            self.speak(text: "Running Start")
+            self.startSession()
+            self.showCountdown.accept(false)
+        }
+    }
+    
+    private func speak(text: String) {
+        let utterance = AVSpeechUtterance(string: text)
+        utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
+        speechSynthesizer.speak(utterance)
+    }
+    
     private func startSession() {
         runningManager.startNewSession()
         sessionStateRelay.accept(.running)
         startTimer()
     }
-    
+
     private func pauseSession() {
         sessionStateRelay.accept(.paused)
         stopTimer()
     }
-    
+
     private func resumeSession() {
         sessionStateRelay.accept(.running)
         startTimer()
     }
-    
+
     private func stopSession() {
         runningManager.endCurrentSession()
         sessionStateRelay.accept(.stopped)
         stopTimer()
         resetTimer()
     }
-    
+
     private func startTimer() {
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             self?.durationTime += 1
         }
     }
-    
+
     private func stopTimer() {
         timer?.invalidate()
     }
-    
+
     private func resetTimer() {
         durationTime = 0
     }
-    
-    // MARK: - HealthKit
     
     private func requestHealthKitAuthorization() {
         let heartRateType = HKObjectType.quantityType(forIdentifier: .heartRate)!
@@ -166,12 +195,11 @@ class RunningViewModel {
             if success {
                 self.startHeartRateQuery()
             } else {
-                // Handle error
-                print("건강 정보 없음")
+                print("HealthKit authorization failed.")
             }
         }
     }
-    
+
     private func startHeartRateQuery() {
         guard let sampleType = HKObjectType.quantityType(forIdentifier: .heartRate) else { return }
         
@@ -186,7 +214,7 @@ class RunningViewModel {
         healthStore.execute(query)
         self.heartRateQuery = query
     }
-    
+
     private func processHeartRateSamples(_ samples: [HKSample]?) {
         guard let samples = samples as? [HKQuantitySample] else { return }
         
