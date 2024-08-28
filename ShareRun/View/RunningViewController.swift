@@ -75,6 +75,16 @@ class RunningViewController: UIViewController {
     private let bpmSubLabel: UILabel = {
         return LabelFactory.createRunningLabel(fontSize: 28, weight: .semibold, textColor: .gray, textAlignment: .center, title: "BPM")
     }()
+    
+    private let finishWarningLabel: UILabel = {
+        let label = UILabel()
+        label.text = "정지 버튼을 길게 눌러야 런닝이 종료 됩니다."
+        label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        label.textColor = .gray
+        label.textAlignment = .center
+        label.isHidden = true
+        return label
+    }()
 
     private let startButton: UIButton = {
         let button = UIButton(type: .system)
@@ -167,6 +177,7 @@ class RunningViewController: UIViewController {
         view.addSubview(startButton)
         view.addSubview(stopButton)
         view.addSubview(pauseResumeButton)
+        view.addSubview(finishWarningLabel)
         
         mapView.snp.makeConstraints {
             $0.top.leading.trailing.equalToSuperview()
@@ -222,6 +233,11 @@ class RunningViewController: UIViewController {
             $0.height.equalTo(80)
         }
         
+        finishWarningLabel.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalTo(startButton.snp.bottom).offset(16)
+        }
+        
         addGradientLayer()
     }
     
@@ -238,10 +254,6 @@ class RunningViewController: UIViewController {
     
     private func setupBindings() {
         startButton.rx.tap
-            .bind(to: viewModel.startStopTrigger)
-            .disposed(by: disposeBag)
-        
-        stopButton.rx.tap
             .bind(to: viewModel.startStopTrigger)
             .disposed(by: disposeBag)
         
@@ -267,16 +279,29 @@ class RunningViewController: UIViewController {
         
         viewModel.sessionState
             .drive(onNext: { [weak self] state in
-                if state == .running {
-                    self?.startButton.isHidden = true
-                    self?.stopButton.isHidden = false
-                    self?.pauseResumeButton.isHidden = false
-                    self?.startUpdatingLocation()
-                } else {
-                    self?.startButton.isHidden = false
-                    self?.stopButton.isHidden = true
-                    self?.pauseResumeButton.isHidden = true
-                    self?.locationManager.stopUpdatingLocation()
+                guard let self = self else { return }
+                let config = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold)
+                
+                switch state {
+                case .running:
+                    self.startButton.isHidden = true
+                    self.stopButton.isHidden = false
+                    self.pauseResumeButton.isHidden = false
+                    self.pauseResumeButton.setImage(UIImage(systemName: "pause.fill", withConfiguration: config), for: .normal)
+                    self.startUpdatingLocation()
+                    
+                case .paused:
+                    self.startButton.isHidden = true
+                    self.stopButton.isHidden = false
+                    self.pauseResumeButton.isHidden = false
+                    self.pauseResumeButton.setImage(UIImage(systemName: "play.fill", withConfiguration: config), for: .normal)
+                    self.locationManager.stopUpdatingLocation()
+                    
+                case .stopped:
+                    self.startButton.isHidden = false
+                    self.stopButton.isHidden = true
+                    self.pauseResumeButton.isHidden = true
+                    self.locationManager.stopUpdatingLocation()
                 }
             })
             .disposed(by: disposeBag)
@@ -294,6 +319,35 @@ class RunningViewController: UIViewController {
                 self?.countdownLabel.text = nil
             })
             .disposed(by: disposeBag)
+        
+        viewModel.showFinishWarning
+            .map { !$0 }
+            .bind(to: finishWarningLabel.rx.isHidden)
+            .disposed(by: disposeBag)
+        
+        stopButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                self?.finishWarningLabel.isHidden = false
+            })
+            .disposed(by: disposeBag)
+        
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
+        longPressGesture.minimumPressDuration = 2.0
+        stopButton.addGestureRecognizer(longPressGesture)
+    }
+    
+    @objc private func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
+        switch gesture.state {
+        case .began:
+            viewModel.showFinishWarning.accept(true)
+        case .ended:
+            viewModel.showFinishWarning.accept(false)
+            viewModel.stopButtonLongPressTrigger.accept(())
+        case .cancelled:
+            viewModel.showFinishWarning.accept(false)
+        default:
+            break
+        }
     }
     
     private func setupMapView() {

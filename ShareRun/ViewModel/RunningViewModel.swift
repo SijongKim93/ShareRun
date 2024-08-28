@@ -29,6 +29,8 @@ class RunningViewModel {
     let startStopTrigger = PublishRelay<Void>()
     let pauseResumeTrigger = PublishRelay<Void>()
     let locationUpdate = PublishRelay<CLLocation>()
+    let stopButtonLongPressTrigger = PublishRelay<Void>()
+    let showFinishWarning = BehaviorRelay<Bool>(value: false)
     
     // Output
     let distance: Driver<String>
@@ -121,7 +123,15 @@ class RunningViewModel {
                 self?.runningManager.updateCurrentSession(newLocation: location)
             })
             .disposed(by: disposeBag)
+        
+        stopButtonLongPressTrigger
+            .throttle(.seconds(2), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                self?.finishSession()
+            })
+            .disposed(by: disposeBag)
     }
+
     
     private func startCountdown() {
         let countdownNumbers = ["3", "2", "1", "GO"]
@@ -158,11 +168,13 @@ class RunningViewModel {
     private func pauseSession() {
         sessionStateRelay.accept(.paused)
         stopTimer()
+        speak(text: "Pause")
     }
 
     private func resumeSession() {
         sessionStateRelay.accept(.running)
         startTimer()
+        speak(text: "Running Start")
     }
 
     private func stopSession() {
@@ -170,6 +182,11 @@ class RunningViewModel {
         sessionStateRelay.accept(.stopped)
         stopTimer()
         resetTimer()
+    }
+    
+    private func finishSession() {
+        stopSession()
+        speak(text: "Running Finish")
     }
 
     private func startTimer() {
