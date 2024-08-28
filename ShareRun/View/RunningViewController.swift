@@ -11,6 +11,7 @@ import RxCocoa
 import CoreLocation
 import SnapKit
 import MapKit
+import AVFoundation
 
 class RunningViewController: UIViewController {
     private let disposeBag = DisposeBag()
@@ -19,7 +20,7 @@ class RunningViewController: UIViewController {
     private var routeCoordinates: [CLLocationCoordinate2D] = []
     private var routePolyline: MKPolyline?
     private var previousLocation: CLLocation?
-    
+
     private let mapView: MKMapView = {
         let mapView = MKMapView()
         mapView.mapType = .standard
@@ -27,44 +28,64 @@ class RunningViewController: UIViewController {
         mapView.userTrackingMode = .follow
         return mapView
     }()
-    
+
     private let gradientView: UIView = {
         let view = UIView()
         return view
     }()
-    
+
+    private let countdownLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 100, weight: .bold)
+        label.textColor = .systemIndigo
+        label.textAlignment = .center
+        label.alpha = 0
+        label.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+        return label
+    }()
+
     private let distanceLabel: UILabel = {
         return LabelFactory.createRunningLabel(fontSize: 35, weight: .bold, textColor: .black, textAlignment: .center)
     }()
-    
+
     private let distanceSubLabel: UILabel = {
         return LabelFactory.createRunningLabel(fontSize: 28, weight: .semibold, textColor: .gray, textAlignment: .center, title: "KM")
     }()
-    
+
     private let timeLabel: UILabel = {
         return LabelFactory.createRunningLabel(fontSize: 35, weight: .bold, textColor: .black, textAlignment: .center)
     }()
-    
+
     private let timeSubLabel: UILabel = {
         return LabelFactory.createRunningLabel(fontSize: 28, weight: .semibold, textColor: .gray, textAlignment: .center, title: "TIME")
     }()
-    
+
     private let paceLabel: UILabel = {
         return LabelFactory.createRunningLabel(fontSize: 35, weight: .bold, textColor: .black, textAlignment: .center)
     }()
-    
+
     private let paceSubLabel: UILabel = {
         return LabelFactory.createRunningLabel(fontSize: 28, weight: .semibold, textColor: .gray, textAlignment: .center, title: "PACE")
     }()
-    
+
     private let bpmLabel: UILabel = {
         return LabelFactory.createRunningLabel(fontSize: 35, weight: .bold, textColor: .black, textAlignment: .center)
     }()
-    
+
     private let bpmSubLabel: UILabel = {
         return LabelFactory.createRunningLabel(fontSize: 28, weight: .semibold, textColor: .gray, textAlignment: .center, title: "BPM")
     }()
     
+    private let finishWarningLabel: UILabel = {
+        let label = UILabel()
+        label.text = "정지 버튼을 길게 눌러야 런닝이 종료 됩니다."
+        label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        label.textColor = .gray
+        label.textAlignment = .center
+        label.isHidden = true
+        return label
+    }()
+
     private let startButton: UIButton = {
         let button = UIButton(type: .system)
         let config = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold)
@@ -74,7 +95,7 @@ class RunningViewController: UIViewController {
         button.layer.cornerRadius = 40
         return button
     }()
-    
+
     private let stopButton: UIButton = {
         let button = UIButton(type: .system)
         let config = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold)
@@ -85,7 +106,7 @@ class RunningViewController: UIViewController {
         button.isHidden = true
         return button
     }()
-    
+
     private let pauseResumeButton: UIButton = {
         let button = UIButton(type: .system)
         let config = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold)
@@ -96,7 +117,7 @@ class RunningViewController: UIViewController {
         button.isHidden = true
         return button
     }()
-    
+
     private lazy var distanceStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [distanceLabel, distanceSubLabel])
         stackView.axis = .vertical
@@ -104,7 +125,7 @@ class RunningViewController: UIViewController {
         stackView.spacing = 5
         return stackView
     }()
-    
+
     private lazy var timeStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [timeLabel, timeSubLabel])
         stackView.axis = .vertical
@@ -112,7 +133,7 @@ class RunningViewController: UIViewController {
         stackView.spacing = 5
         return stackView
     }()
-    
+
     private lazy var paceStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [paceLabel, paceSubLabel])
         stackView.axis = .vertical
@@ -120,7 +141,7 @@ class RunningViewController: UIViewController {
         stackView.spacing = 5
         return stackView
     }()
-    
+
     private lazy var bpmStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [bpmLabel, bpmSubLabel])
         stackView.axis = .vertical
@@ -128,7 +149,7 @@ class RunningViewController: UIViewController {
         stackView.spacing = 5
         return stackView
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -148,6 +169,7 @@ class RunningViewController: UIViewController {
     private func setupUI() {
         view.addSubview(mapView)
         view.addSubview(gradientView)
+        view.addSubview(countdownLabel)
         view.addSubview(distanceStackView)
         view.addSubview(timeStackView)
         view.addSubview(paceStackView)
@@ -155,6 +177,7 @@ class RunningViewController: UIViewController {
         view.addSubview(startButton)
         view.addSubview(stopButton)
         view.addSubview(pauseResumeButton)
+        view.addSubview(finishWarningLabel)
         
         mapView.snp.makeConstraints {
             $0.top.leading.trailing.equalToSuperview()
@@ -163,6 +186,10 @@ class RunningViewController: UIViewController {
         
         gradientView.snp.makeConstraints {
             $0.edges.equalTo(mapView)
+        }
+        
+        countdownLabel.snp.makeConstraints {
+            $0.center.equalTo(mapView)
         }
         
         distanceStackView.snp.makeConstraints {
@@ -206,6 +233,11 @@ class RunningViewController: UIViewController {
             $0.height.equalTo(80)
         }
         
+        finishWarningLabel.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalTo(startButton.snp.bottom).offset(16)
+        }
+        
         addGradientLayer()
     }
     
@@ -222,36 +254,11 @@ class RunningViewController: UIViewController {
     
     private func setupBindings() {
         startButton.rx.tap
-            .subscribe(onNext: { [weak self] in
-                self?.startButton.isHidden = true
-                self?.stopButton.isHidden = false
-                self?.pauseResumeButton.isHidden = false
-                self?.viewModel.startStopTrigger.accept(())
-            })
-            .disposed(by: disposeBag)
-        
-        stopButton.rx.tap
-            .subscribe(onNext: { [weak self] in
-                self?.startButton.isHidden = false
-                self?.stopButton.isHidden = true
-                self?.pauseResumeButton.isHidden = true
-                self?.viewModel.startStopTrigger.accept(())
-            })
+            .bind(to: viewModel.startStopTrigger)
             .disposed(by: disposeBag)
         
         pauseResumeButton.rx.tap
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-                let config = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold)
-                
-                if self.viewModel.sessionStateRelay.value == .running {
-                    self.pauseResumeButton.setImage(UIImage(systemName: "figure.run", withConfiguration: config), for: .normal)
-                    self.viewModel.pauseResumeTrigger.accept(())
-                } else {
-                    self.pauseResumeButton.setImage(UIImage(systemName: "pause.fill", withConfiguration: config), for: .normal)
-                    self.viewModel.pauseResumeTrigger.accept(())
-                }
-            })
+            .bind(to: viewModel.pauseResumeTrigger)
             .disposed(by: disposeBag)
         
         viewModel.distance
@@ -272,13 +279,75 @@ class RunningViewController: UIViewController {
         
         viewModel.sessionState
             .drive(onNext: { [weak self] state in
-                if state == .running {
-                    self?.startUpdatingLocation()
-                } else {
-                    self?.locationManager.stopUpdatingLocation()
+                guard let self = self else { return }
+                let config = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold)
+                
+                switch state {
+                case .running:
+                    self.startButton.isHidden = true
+                    self.stopButton.isHidden = false
+                    self.pauseResumeButton.isHidden = false
+                    self.pauseResumeButton.setImage(UIImage(systemName: "pause.fill", withConfiguration: config), for: .normal)
+                    self.startUpdatingLocation()
+                    
+                case .paused:
+                    self.startButton.isHidden = true
+                    self.stopButton.isHidden = false
+                    self.pauseResumeButton.isHidden = false
+                    self.pauseResumeButton.setImage(UIImage(systemName: "play.fill", withConfiguration: config), for: .normal)
+                    self.locationManager.stopUpdatingLocation()
+                    
+                case .stopped:
+                    self.startButton.isHidden = false
+                    self.stopButton.isHidden = true
+                    self.pauseResumeButton.isHidden = true
+                    self.locationManager.stopUpdatingLocation()
                 }
             })
             .disposed(by: disposeBag)
+        
+        viewModel.countdownText
+            .compactMap { $0 }
+            .subscribe(onNext: { [weak self] text in
+                self?.showCountdownLabel(with: text)
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel.showCountdown
+            .filter { !$0 }
+            .subscribe(onNext: { [weak self] _ in
+                self?.countdownLabel.text = nil
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel.showFinishWarning
+            .map { !$0 }
+            .bind(to: finishWarningLabel.rx.isHidden)
+            .disposed(by: disposeBag)
+        
+        stopButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                self?.finishWarningLabel.isHidden = false
+            })
+            .disposed(by: disposeBag)
+        
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
+        longPressGesture.minimumPressDuration = 2.0
+        stopButton.addGestureRecognizer(longPressGesture)
+    }
+    
+    @objc private func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
+        switch gesture.state {
+        case .began:
+            viewModel.showFinishWarning.accept(true)
+        case .ended:
+            viewModel.showFinishWarning.accept(false)
+            viewModel.stopButtonLongPressTrigger.accept(())
+        case .cancelled:
+            viewModel.showFinishWarning.accept(false)
+        default:
+            break
+        }
     }
     
     private func setupMapView() {
@@ -322,6 +391,27 @@ class RunningViewController: UIViewController {
         self.previousLocation = location
     }
     
+    private func showCountdownLabel(with text: String) {
+        countdownLabel.text = text
+        countdownLabel.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+        countdownLabel.alpha = 0
+        
+        UIView.animate(withDuration: 0.6,
+                       delay: 0,
+                       usingSpringWithDamping: 0.7,
+                       initialSpringVelocity: 0.5,
+                       options: [.curveEaseInOut],
+                       animations: {
+            self.countdownLabel.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
+            self.countdownLabel.alpha = 1.0
+        }) { _ in
+            UIView.animate(withDuration: 0.4, animations: {
+                self.countdownLabel.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+                self.countdownLabel.alpha = 0
+            })
+        }
+    }
+
     private func checkLocationAuthorization() {
         switch locationManager.authorizationStatus {
         case .notDetermined:
