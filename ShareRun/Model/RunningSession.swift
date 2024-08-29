@@ -16,7 +16,7 @@ struct RunningSession {
     let duration: BehaviorRelay<TimeInterval>
     let locations: BehaviorRelay<[CLLocation]>
     
-    init(id: UUID = UUID (), date: Date = Date()) {
+    init(id: UUID = UUID (), date: Date = Date(), distance: Double = 0.0, duration: TimeInterval = 0.0, locations: [CLLocation] = []) {
         self.id = id
         self.date = date
         self.distance = BehaviorRelay<Double>(value: 0.0)
