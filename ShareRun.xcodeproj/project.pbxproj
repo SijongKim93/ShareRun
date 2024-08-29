@@ -27,6 +27,7 @@
 		4D27D64E2C7C43F800C69DC1 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D27D64D2C7C43F800C69DC1 /* ScheduleViewController.swift */; };
 		4D27D6502C7C440F00C69DC1 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D27D64F2C7C440F00C69DC1 /* SettingsViewController.swift */; };
 		4D27D6532C7DFAAB00C69DC1 /* LabelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D27D6522C7DFAAB00C69DC1 /* LabelFactory.swift */; };
+		4D27D6562C80379600C69DC1 /* RunningRecordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D27D6552C80379600C69DC1 /* RunningRecordView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +47,7 @@
 		4D27D64D2C7C43F800C69DC1 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 		4D27D64F2C7C440F00C69DC1 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		4D27D6522C7DFAAB00C69DC1 /* LabelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelFactory.swift; sourceTree = "<group>"; };
+		4D27D6552C80379600C69DC1 /* RunningRecordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningRecordView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,7 +122,7 @@
 			isa = PBXGroup;
 			children = (
 				4D27D64B2C7C43E700C69DC1 /* ShareViewController.swift */,
-				4D27D60D2C7879FC00C69DC1 /* RunningViewController.swift */,
+				4D27D6542C80377A00C69DC1 /* Running */,
 				4D27D64D2C7C43F800C69DC1 /* ScheduleViewController.swift */,
 				4D27D64F2C7C440F00C69DC1 /* SettingsViewController.swift */,
 			);
@@ -141,6 +143,15 @@
 				4D27D6522C7DFAAB00C69DC1 /* LabelFactory.swift */,
 			);
 			path = Factory;
+			sourceTree = "<group>";
+		};
+		4D27D6542C80377A00C69DC1 /* Running */ = {
+			isa = PBXGroup;
+			children = (
+				4D27D6552C80379600C69DC1 /* RunningRecordView.swift */,
+				4D27D60D2C7879FC00C69DC1 /* RunningViewController.swift */,
+			);
+			path = Running;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -237,6 +248,7 @@
 				4D27D63F2C7AFDE900C69DC1 /* RunningViewModel.swift in Sources */,
 				4D27D63D2C787ECF00C69DC1 /* RunningManager.swift in Sources */,
 				4D27D60A2C7879FC00C69DC1 /* AppDelegate.swift in Sources */,
+				4D27D6562C80379600C69DC1 /* RunningRecordView.swift in Sources */,
 				4D27D64C2C7C43E700C69DC1 /* ShareViewController.swift in Sources */,
 				4D27D60C2C7879FC00C69DC1 /* SceneDelegate.swift in Sources */,
 			);
