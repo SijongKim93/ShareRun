@@ -20,7 +20,7 @@ class RunningViewController: UIViewController {
     private var routeCoordinates: [CLLocationCoordinate2D] = []
     private var routePolyline: MKPolyline?
     private var previousLocation: CLLocation?
-
+    
     private let mapView: MKMapView = {
         let mapView = MKMapView()
         mapView.mapType = .standard
@@ -28,12 +28,12 @@ class RunningViewController: UIViewController {
         mapView.userTrackingMode = .follow
         return mapView
     }()
-
+    
     private let gradientView: UIView = {
         let view = UIView()
         return view
     }()
-
+    
     private let countdownLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 100, weight: .bold)
@@ -43,35 +43,35 @@ class RunningViewController: UIViewController {
         label.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
         return label
     }()
-
+    
     private let distanceLabel: UILabel = {
         return LabelFactory.createRunningLabel(fontSize: 35, weight: .bold, textColor: .black, textAlignment: .center)
     }()
-
+    
     private let distanceSubLabel: UILabel = {
         return LabelFactory.createRunningLabel(fontSize: 28, weight: .semibold, textColor: .gray, textAlignment: .center, title: "KM")
     }()
-
+    
     private let timeLabel: UILabel = {
         return LabelFactory.createRunningLabel(fontSize: 35, weight: .bold, textColor: .black, textAlignment: .center)
     }()
-
+    
     private let timeSubLabel: UILabel = {
         return LabelFactory.createRunningLabel(fontSize: 28, weight: .semibold, textColor: .gray, textAlignment: .center, title: "TIME")
     }()
-
+    
     private let paceLabel: UILabel = {
         return LabelFactory.createRunningLabel(fontSize: 35, weight: .bold, textColor: .black, textAlignment: .center)
     }()
-
+    
     private let paceSubLabel: UILabel = {
         return LabelFactory.createRunningLabel(fontSize: 28, weight: .semibold, textColor: .gray, textAlignment: .center, title: "PACE")
     }()
-
+    
     private let bpmLabel: UILabel = {
         return LabelFactory.createRunningLabel(fontSize: 35, weight: .bold, textColor: .black, textAlignment: .center)
     }()
-
+    
     private let bpmSubLabel: UILabel = {
         return LabelFactory.createRunningLabel(fontSize: 28, weight: .semibold, textColor: .gray, textAlignment: .center, title: "BPM")
     }()
@@ -85,7 +85,7 @@ class RunningViewController: UIViewController {
         label.isHidden = true
         return label
     }()
-
+    
     private let startButton: UIButton = {
         let button = UIButton(type: .system)
         let config = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold)
@@ -95,7 +95,7 @@ class RunningViewController: UIViewController {
         button.layer.cornerRadius = 40
         return button
     }()
-
+    
     private let stopButton: UIButton = {
         let button = UIButton(type: .system)
         let config = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold)
@@ -106,7 +106,7 @@ class RunningViewController: UIViewController {
         button.isHidden = true
         return button
     }()
-
+    
     private let pauseResumeButton: UIButton = {
         let button = UIButton(type: .system)
         let config = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold)
@@ -117,7 +117,7 @@ class RunningViewController: UIViewController {
         button.isHidden = true
         return button
     }()
-
+    
     private lazy var distanceStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [distanceLabel, distanceSubLabel])
         stackView.axis = .vertical
@@ -125,7 +125,7 @@ class RunningViewController: UIViewController {
         stackView.spacing = 5
         return stackView
     }()
-
+    
     private lazy var timeStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [timeLabel, timeSubLabel])
         stackView.axis = .vertical
@@ -133,7 +133,7 @@ class RunningViewController: UIViewController {
         stackView.spacing = 5
         return stackView
     }()
-
+    
     private lazy var paceStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [paceLabel, paceSubLabel])
         stackView.axis = .vertical
@@ -141,7 +141,7 @@ class RunningViewController: UIViewController {
         stackView.spacing = 5
         return stackView
     }()
-
+    
     private lazy var bpmStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [bpmLabel, bpmSubLabel])
         stackView.axis = .vertical
@@ -149,7 +149,7 @@ class RunningViewController: UIViewController {
         stackView.spacing = 5
         return stackView
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -343,6 +343,38 @@ class RunningViewController: UIViewController {
         case .ended:
             viewModel.showFinishWarning.accept(false)
             viewModel.stopButtonLongPressTrigger.accept(())
+            
+            let recordView = RunningRecordView(viewModel: viewModel)
+            
+            let backgroundView = UIView()
+            backgroundView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+            backgroundView.frame = view.bounds
+            backgroundView.alpha = 0
+            view.addSubview(backgroundView)
+            
+            view.addSubview(recordView)
+            recordView.snp.makeConstraints {
+                $0.center.equalToSuperview()
+                $0.width.equalToSuperview().multipliedBy(0.8)
+                $0.height.equalToSuperview().multipliedBy(0.5)
+            }
+            
+            recordView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+            UIView.animate(withDuration: 0.3) {
+                recordView.transform = CGAffineTransform.identity
+                backgroundView.alpha = 1.0
+            }
+            
+            recordView.onOkButtonTapped = { [weak backgroundView] in
+                UIView.animate(withDuration: 0.3, animations: {
+                    backgroundView?.alpha = 0
+                    recordView.alpha = 0
+                }, completion: { _ in
+                    backgroundView?.removeFromSuperview()
+                    recordView.removeFromSuperview()
+                })
+            }
+            
         case .cancelled:
             viewModel.showFinishWarning.accept(false)
         default:
@@ -411,7 +443,7 @@ class RunningViewController: UIViewController {
             })
         }
     }
-
+    
     private func checkLocationAuthorization() {
         switch locationManager.authorizationStatus {
         case .notDetermined:
