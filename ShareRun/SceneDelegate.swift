@@ -30,13 +30,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let runningVC = RunningViewController()
         runningVC.tabBarItem = UITabBarItem(title: "Running", image: UIImage(systemName: "figure.run"), tag: 1)
         
-//        let scheduleVC = RecordViewController()
-//        scheduleVC.tabBarItem = UITabBarItem(title: "Record", image: UIImage(systemName: "list.clipboard"), tag: 2)
+        let RecordVC = RecordViewController()
+        RecordVC.tabBarItem = UITabBarItem(title: "Record", image: UIImage(systemName: "list.clipboard"), tag: 2)
         
         let settingVC = SettingsViewController()
         settingVC.tabBarItem = UITabBarItem(title: "Setting", image: UIImage(systemName: "gear"), tag: 3)
         
-        tabBarController.viewControllers = [shareVC, runningVC, settingVC]
+        tabBarController.viewControllers = [shareVC, runningVC, RecordVC, settingVC]
         
         return tabBarController
     }

@@ -12,6 +12,11 @@ import Charts
 struct ChartView: View {
     let data: [ChartData]
     
+    init(data: [ChartData]) {
+        self.data = data
+        print("Received ChartData: \(data)")
+    }
+    
     var body: some View {
         Chart {
             ForEach(data) { entry in
@@ -26,8 +31,6 @@ struct ChartView: View {
         .chartYAxis {
             AxisMarks(position: .leading)
         }
-        .frame(height: 150)
-        .padding()
     }
 }
 

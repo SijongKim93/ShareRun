@@ -21,8 +21,8 @@ class RecordViewModel {
                 guard let self = self else { return .just(0.0) }
                 return self.calculateAverageDistance(for: segment)
             }
-            .map { "\($0) KM" }
-            .asDriver(onErrorJustReturn: "0.00 KM")
+            .map { "\($0)" }
+            .asDriver(onErrorJustReturn: "0.00")
     }()
     
     lazy var averageDuration: Driver<String> = {
@@ -75,17 +75,24 @@ class RecordViewModel {
     private let runningSessions: [RunningSession]
     private let disposeBag = DisposeBag()
     
-    init(runningSessions: [RunningSession] = []) {
-        // 여기에서 초기값을 설정합니다.
-        if runningSessions.isEmpty {
-            let session1 = RunningSession(date: Calendar.current.date(byAdding: .day, value: -1, to: Date())!, distance: 5.0, duration: 1800)
-            let session2 = RunningSession(date: Calendar.current.date(byAdding: .day, value: -8, to: Date())!, distance: 7.2, duration: 2400)
-            let session3 = RunningSession(date: Calendar.current.date(byAdding: .month, value: -1, to: Date())!, distance: 10.5, duration: 3600)
-            
-            self.runningSessions = [session1, session2, session3]
-        } else {
-            self.runningSessions = runningSessions
-        }
+    init() {
+        // Week에 해당하는 더미 데이터 설정
+        let session1 = RunningSession(date: Calendar.current.date(byAdding: .day, value: -1, to: Date())!,
+                                      distance: 5.0, duration: 1800)
+        let session2 = RunningSession(date: Calendar.current.date(byAdding: .day, value: -2, to: Date())!,
+                                      distance: 7.2, duration: 2400)
+        let session3 = RunningSession(date: Calendar.current.date(byAdding: .day, value: -3, to: Date())!,
+                                      distance: 0.0, duration: 0.0)
+        let session4 = RunningSession(date: Calendar.current.date(byAdding: .day, value: -4, to: Date())!,
+                                      distance: 6.5, duration: 2200)
+        let session5 = RunningSession(date: Calendar.current.date(byAdding: .day, value: -5, to: Date())!,
+                                      distance: 4.3, duration: 1900)
+        let session6 = RunningSession(date: Calendar.current.date(byAdding: .day, value: -6, to: Date())!,
+                                      distance: 8.1, duration: 2500)
+        let session7 = RunningSession(date: Calendar.current.date(byAdding: .day, value: -7, to: Date())!,
+                                      distance: 10.0, duration: 3600)
+        
+        self.runningSessions = [session1, session2, session3, session4, session5, session6, session7]
     }
     
     private func calculateAverageDistance(for segment: Int) -> Observable<Double> {
@@ -96,7 +103,8 @@ class RecordViewModel {
     
     private func calculateAverageDuration(for segment: Int) -> Observable<TimeInterval> {
         let filteredSessions = filterSessions(for: segment)
-        let totalDuration = filteredSessions.reduce(0) { $0 + $1.duration.value }
+        // Int 값을 TimeInterval로 변환
+        let totalDuration = filteredSessions.reduce(0.0) { $0 + TimeInterval($1.duration.value) }
         return Observable.just(filteredSessions.isEmpty ? 0.0 : totalDuration / Double(filteredSessions.count))
     }
     
@@ -113,29 +121,28 @@ class RecordViewModel {
     }
     
     private func calculateChartData(for segment: Int) -> Observable<[ChartData]> {
-        let filteredSessions = filterSessions(for: segment)
         var groupedData: [String: Double] = [:]
         
         let calendar = Calendar.current
+        let weekdaySymbols = calendar.shortWeekdaySymbols
+        
+        
+        for weekday in weekdaySymbols {
+            groupedData[weekday] = 0.0
+        }
+        
+        let filteredSessions = filterSessions(for: segment)
+        
         for session in filteredSessions {
-            let key: String
-            switch segment {
-            case 0:
-                key = calendar.weekdaySymbols[calendar.component(.weekday, from: session.date) - 1]
-            case 1:
-                key = String(calendar.component(.day, from: session.date    ))
-            case 2:
-                key = calendar.monthSymbols[calendar.component(.month, from: session.date) - 1]
-            default:
-                key = ""
-            }
-            
+            let weekday = calendar.component(.weekday, from: session.date) - 1
+            let key = weekdaySymbols[weekday]
             groupedData[key, default: 0.0] += session.distance.value
         }
         
-        let chartData = groupedData.map { ChartData(value: $0.value, label: $0.key) }
+        let chartData = weekdaySymbols.map { ChartData(value: groupedData[$0] ?? 0.0, label: $0) }
         return Observable.just(chartData)
     }
+    
     
     private func filterSessions(for segment: Int) -> [RunningSession] {
         let calendar = Calendar.current
