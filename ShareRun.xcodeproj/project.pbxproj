@@ -34,6 +34,7 @@
 		4D27D6632C80A2F900C69DC1 /* WeekView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D27D6622C80A2F900C69DC1 /* WeekView.swift */; };
 		4D27D6652C80AD5F00C69DC1 /* CalendarCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D27D6642C80AD5F00C69DC1 /* CalendarCollectionViewCell.swift */; };
 		4D27D6672C819CF000C69DC1 /* RecordAverageLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D27D6662C819CF000C69DC1 /* RecordAverageLabelView.swift */; };
+		4D27D6692C81BEDC00C69DC1 /* MonthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D27D6682C81BEDC00C69DC1 /* MonthView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +61,7 @@
 		4D27D6622C80A2F900C69DC1 /* WeekView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekView.swift; sourceTree = "<group>"; };
 		4D27D6642C80AD5F00C69DC1 /* CalendarCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarCollectionViewCell.swift; sourceTree = "<group>"; };
 		4D27D6662C819CF000C69DC1 /* RecordAverageLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordAverageLabelView.swift; sourceTree = "<group>"; };
+		4D27D6682C81BEDC00C69DC1 /* MonthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,6 +176,7 @@
 				4D27D6642C80AD5F00C69DC1 /* CalendarCollectionViewCell.swift */,
 				4D27D6602C8097E200C69DC1 /* ChartView.swift */,
 				4D27D6622C80A2F900C69DC1 /* WeekView.swift */,
+				4D27D6682C81BEDC00C69DC1 /* MonthView.swift */,
 				4D27D6662C819CF000C69DC1 /* RecordAverageLabelView.swift */,
 				4D27D64D2C7C43F800C69DC1 /* RecordViewController.swift */,
 			);
@@ -276,6 +279,7 @@
 				4D27D64E2C7C43F800C69DC1 /* RecordViewController.swift in Sources */,
 				4D27D63F2C7AFDE900C69DC1 /* RunningViewModel.swift in Sources */,
 				4D27D6612C8097E200C69DC1 /* ChartView.swift in Sources */,
+				4D27D6692C81BEDC00C69DC1 /* MonthView.swift in Sources */,
 				4D27D63D2C787ECF00C69DC1 /* RunningManager.swift in Sources */,
 				4D27D6672C819CF000C69DC1 /* RecordAverageLabelView.swift in Sources */,
 				4D27D65D2C807AE900C69DC1 /* RecordViewModel.swift in Sources */,

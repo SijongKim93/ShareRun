@@ -19,6 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.rootViewController = setupTabBarController()
         self.window = window
         window.makeKeyAndVisible()
+        
     }
     
     func setupTabBarController() -> UITabBarController {
@@ -37,6 +38,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         settingVC.tabBarItem = UITabBarItem(title: "Setting", image: UIImage(systemName: "gear"), tag: 3)
         
         tabBarController.viewControllers = [shareVC, runningVC, RecordVC, settingVC]
+        tabBarController.tabBar.backgroundColor = .white
         
         return tabBarController
     }

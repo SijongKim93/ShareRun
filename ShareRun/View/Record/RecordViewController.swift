@@ -22,7 +22,7 @@ class RecordViewController: UIViewController {
     }()
     
     private let weekView = WeekView()
-    private let monthView = UIView()
+    private let monthView = MonthView()
     private let allTimeView = UIView()
     
     override func viewDidLoad() {
@@ -55,6 +55,7 @@ class RecordViewController: UIViewController {
         contentView.snp.makeConstraints {
             $0.edges.equalToSuperview()
             $0.width.equalTo(scrollView.snp.width)
+            $0.height.equalTo(1300) // 초기 높이는 가장 큰 view의 높이로 설정
         }
         
         contentView.addSubview(weekView)
@@ -68,7 +69,7 @@ class RecordViewController: UIViewController {
         
         monthView.snp.makeConstraints {
             $0.top.leading.trailing.equalToSuperview()
-            $0.height.equalTo(500)
+            $0.height.equalTo(1300)
         }
         
         allTimeView.snp.makeConstraints {
