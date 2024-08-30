@@ -94,6 +94,23 @@ class WeekView: UIView {
             .disposed(by: disposeBag)
     }
     
+    private func setupChartView() {
+            let chartView = UIHostingController(rootView: ChartView(data: []))
+            
+            addSubview(chartView.view)
+            chartView.view.snp.makeConstraints {
+                $0.top.equalTo(collectionView.snp.bottom).offset(16)
+                $0.leading.trailing.bottom.equalToSuperview().inset(16)
+                $0.height.equalTo(150)
+            }
+            
+            viewModel.chartData
+                .drive(onNext: { data in
+                    chartView.rootView = ChartView(data: data)
+                })
+                .disposed(by: disposeBag)
+        }
+    
     private func startOfWeek() -> Date {
         let components = Calendar.current.dateComponents([.yearForWeekOfYear, .weekOfYear], from: Date())
         return Calendar.current.date(from: components)!

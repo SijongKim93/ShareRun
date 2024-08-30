@@ -33,26 +33,3 @@ struct ChartView: View {
         }
     }
 }
-
-struct ChartView_Previews: PreviewProvider {
-    static var previews: some View {
-        ChartView(data: generateMonthlyData())
-    }
-}
-
-// Helper function to generate sample monthly data
-func generateMonthlyData() -> [ChartData] {
-    let allDays = (1...30).map { day in
-        Calendar.current.date(byAdding: .day, value: day - 1, to: Date())!
-    }
-    
-    return allDays.map { date in
-        // Simulating data with some random entries
-        let value = Bool.random() ? Double.random(in: 0...10) : 0
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd"
-        let label = formatter.string(from: date)
-        
-        return ChartData(value: value, label: label)
-    }
-}
