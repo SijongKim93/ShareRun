@@ -134,7 +134,7 @@ class RunningViewModel {
 
     
     private func startCountdown() {
-        let countdownNumbers = ["3", "2", "1", "GO"]
+        let countdownNumbers = ["3", "2", "1"]
         var delay: TimeInterval = 0
         
         showCountdown.accept(true)
