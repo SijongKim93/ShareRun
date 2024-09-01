@@ -115,6 +115,5 @@ class WeekView: UIView {
         let components = Calendar.current.dateComponents([.yearForWeekOfYear, .weekOfYear], from: Date())
         return Calendar.current.date(from: components)!
     }
-    
 }
 
