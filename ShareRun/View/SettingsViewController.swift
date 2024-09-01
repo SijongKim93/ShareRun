@@ -9,21 +9,30 @@ import UIKit
 
 class SettingsViewController: UIViewController {
 
+    private let profileImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "person.circle")
+        imageView.layer.cornerRadius = imageView.frame.width / 2
+        imageView.layer.masksToBounds = true
+        return imageView
+    }()
+    
+    private let profileName: UILabel = {
+        return LabelFactory.createRunningLabel(fontSize: 20, weight: .semibold, textColor: .black, textAlignment: .left, title: "사용자 이름")
+    }()
+    
+    private let profileEmail: UILabel = {
+        return LabelFactory.createRunningLabel(fontSize: 20, weight: .semibold, textColor: .black, textAlignment: .left, title: "abc123@abc.abc")
+    }()
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        // Do any additional setup after loading the view.
+       
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    private func setupUI() {
+        
     }
-    */
-
 }

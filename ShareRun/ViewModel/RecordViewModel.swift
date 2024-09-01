@@ -116,8 +116,7 @@ class RecordViewModel {
     }
     
     private func calculateAverageBPM(for segment: Int) -> Observable<Int> {
-        // BPM 데이터가 RunningSession에 추가되어 있다고 가정
-        return Observable.just(120) // 예시로 120 BPM 반환
+        return Observable.just(120)
     }
     
     private func calculateChartData(for segment: Int) -> Observable<[ChartData]> {
@@ -157,7 +156,7 @@ class RecordViewModel {
             return runningSessions.filter { session in
                 calendar.isDate(session.date, equalTo: now, toGranularity: .month)
             }
-        case 2: // 전체
+        case 2:
             return runningSessions
         default:
             return []
