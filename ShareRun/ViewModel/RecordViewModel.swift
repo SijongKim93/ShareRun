@@ -11,10 +11,8 @@ import RxCocoa
 
 class RecordViewModel {
     
-    // Input
     let selectedSegment = BehaviorRelay<Int>(value: 0)
     
-    // Output
     lazy var averageDistance: Driver<String> = {
         return self.selectedSegment
             .flatMapLatest { [weak self] segment -> Observable<Double> in
