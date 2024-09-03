@@ -35,6 +35,7 @@
 		4D27D6652C80AD5F00C69DC1 /* CalendarCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D27D6642C80AD5F00C69DC1 /* CalendarCollectionViewCell.swift */; };
 		4D27D6672C819CF000C69DC1 /* RecordAverageLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D27D6662C819CF000C69DC1 /* RecordAverageLabelView.swift */; };
 		4D27D6692C81BEDC00C69DC1 /* MonthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D27D6682C81BEDC00C69DC1 /* MonthView.swift */; };
+		4D27D66B2C86F9C300C69DC1 /* RunningSessionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D27D66A2C86F9C300C69DC1 /* RunningSessionCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +63,7 @@
 		4D27D6642C80AD5F00C69DC1 /* CalendarCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarCollectionViewCell.swift; sourceTree = "<group>"; };
 		4D27D6662C819CF000C69DC1 /* RecordAverageLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordAverageLabelView.swift; sourceTree = "<group>"; };
 		4D27D6682C81BEDC00C69DC1 /* MonthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthView.swift; sourceTree = "<group>"; };
+		4D27D66A2C86F9C300C69DC1 /* RunningSessionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningSessionCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -175,12 +177,21 @@
 			children = (
 				4D27D6642C80AD5F00C69DC1 /* CalendarCollectionViewCell.swift */,
 				4D27D6602C8097E200C69DC1 /* ChartView.swift */,
-				4D27D6622C80A2F900C69DC1 /* WeekView.swift */,
-				4D27D6682C81BEDC00C69DC1 /* MonthView.swift */,
-				4D27D6662C819CF000C69DC1 /* RecordAverageLabelView.swift */,
 				4D27D64D2C7C43F800C69DC1 /* RecordViewController.swift */,
+				4D27D66C2C87045D00C69DC1 /* SegmentView */,
+				4D27D66A2C86F9C300C69DC1 /* RunningSessionCell.swift */,
 			);
 			path = Record;
+			sourceTree = "<group>";
+		};
+		4D27D66C2C87045D00C69DC1 /* SegmentView */ = {
+			isa = PBXGroup;
+			children = (
+				4D27D6622C80A2F900C69DC1 /* WeekView.swift */,
+				4D27D6662C819CF000C69DC1 /* RecordAverageLabelView.swift */,
+				4D27D6682C81BEDC00C69DC1 /* MonthView.swift */,
+			);
+			path = SegmentView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -272,6 +283,7 @@
 				4D27D60E2C7879FC00C69DC1 /* RunningViewController.swift in Sources */,
 				4D27D6142C7879FC00C69DC1 /* ShareRun.xcdatamodeld in Sources */,
 				4D27D62C2C787C9300C69DC1 /* RunningSession.swift in Sources */,
+				4D27D66B2C86F9C300C69DC1 /* RunningSessionCell.swift in Sources */,
 				4D27D6532C7DFAAB00C69DC1 /* LabelFactory.swift in Sources */,
 				4D27D6652C80AD5F00C69DC1 /* CalendarCollectionViewCell.swift in Sources */,
 				4D27D65F2C80963A00C69DC1 /* ChartData.swift in Sources */,
