@@ -24,7 +24,7 @@ class RecordViewController: UIViewController {
     private let containerView = UIView()
     private let weekView = WeekView()
     private let monthView = MonthView()
-    private let allTimeView = UIView()
+    private let allTimeView = AlltimeView()
     
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -142,7 +142,7 @@ class RecordViewController: UIViewController {
         case 1:
             height = 1300
         case 2:
-            height = 500
+            height = 1000
         default:
             height = 500
         }
