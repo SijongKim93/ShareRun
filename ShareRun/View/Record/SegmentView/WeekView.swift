@@ -18,8 +18,6 @@ class WeekView: UIView {
     private let viewModel = RecordViewModel()
     private let averageLabelView = RecordAverageLabelView()
     
-    
-    
     override init(frame: CGRect) {
         let layout = UICollectionViewFlowLayout()
         layout.minimumInteritemSpacing = 0
