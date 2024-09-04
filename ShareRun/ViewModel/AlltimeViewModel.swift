@@ -16,6 +16,7 @@ class AlltimeViewModel {
     
     init() {
         requestAuthorization()
+        fetchStepData()
     }
     
     private func requestAuthorization() {
@@ -36,18 +37,33 @@ class AlltimeViewModel {
     private func fetchStepData() {
         let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
         let now = Date()
-        let startOfMonth = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: now))!
-        let predicate = HKQuery.predicateForSamples(withStart: startOfMonth, end: now, options: .strictStartDate)
+        let startDate = Calendar.current.date(byAdding: .day, value: -10, to: now)!
         
-        let query = HKStatisticsQuery(quantityType: stepType, quantitySamplePredicate: predicate, options: .cumulativeSum) { [weak self] _, result, _ in
-            guard let self = self, let result = result, let sum = result.sumQuantity() else {
-                print("No data found")
+        var interval = DateComponents()
+        interval.day = 1
+        
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: now, options: .strictStartDate)
+        
+        let query = HKStatisticsCollectionQuery(quantityType: stepType, quantitySamplePredicate: predicate, options: .cumulativeSum, anchorDate: startDate, intervalComponents: interval)
+        
+        query.initialResultsHandler = { [weak self] _, results, error in
+            guard let self = self, let results = results else {
+                print("Error fetching steps: \(String(describing: error))")
                 return
             }
-            let steps = sum.doubleValue(for: HKUnit.count())
-            DispatchQueue.main.async {
-                self.stepsSubject.accept(["총 걸음 수 : \(Int(steps))"]) // 데이터 전달
+            
+            var stepsData: [String] = []
+            
+            results.enumerateStatistics(from: startDate, to: now) { statistics, _ in
+                if let sum = statistics.sumQuantity() {
+                    let steps = Int(sum.doubleValue(for: HKUnit.count()))
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "yyyy-MM-dd"
+                    let dateString = dateFormatter.string(from: statistics.startDate)
+                    stepsData.append("\(dateString): \(steps) 걸음")
+                }
             }
+            self.stepsSubject.accept(stepsData)
         }
         healthStore.execute(query)
     }

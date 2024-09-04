@@ -18,8 +18,6 @@ class AlltimeView: UIView {
         super.init(frame: frame)
         setupTableView()
         bindTableView()
-        
-        
     }
     
     required init?(coder: NSCoder) {
