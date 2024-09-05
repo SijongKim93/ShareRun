@@ -60,7 +60,6 @@ class MonthView: UIView {
     }
     
     private func bindData() {
-        
         viewModel.averageDistance
             .drive(onNext: { [weak self] distance in
                 self?.averageLabelView.configure(distance: distance, pace: "05:00", time: "02:00", count: "20")
