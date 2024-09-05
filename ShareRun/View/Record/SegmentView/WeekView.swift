@@ -99,7 +99,7 @@ class WeekView: UIView {
             chartView.view.snp.makeConstraints {
                 $0.top.equalTo(collectionView.snp.bottom).offset(16)
                 $0.leading.trailing.bottom.equalToSuperview().inset(16)
-                $0.height.equalTo(150)
+                $0.height.equalTo(170)
             }
             
             viewModel.chartData
