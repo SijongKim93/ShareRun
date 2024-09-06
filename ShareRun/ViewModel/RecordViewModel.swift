@@ -101,7 +101,6 @@ class RecordViewModel {
     
     private func calculateAverageDuration(for segment: Int) -> Observable<TimeInterval> {
         let filteredSessions = filterSessions(for: segment)
-        // Int 값을 TimeInterval로 변환
         let totalDuration = filteredSessions.reduce(0.0) { $0 + TimeInterval($1.duration.value) }
         return Observable.just(filteredSessions.isEmpty ? 0.0 : totalDuration / Double(filteredSessions.count))
     }
