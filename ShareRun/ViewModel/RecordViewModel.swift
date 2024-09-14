@@ -81,16 +81,8 @@ class RecordViewModel {
                                       distance: 7.2, duration: 2400)
         let session3 = RunningSession(date: Calendar.current.date(byAdding: .day, value: -3, to: Date())!,
                                       distance: 0.0, duration: 0.0)
-        let session4 = RunningSession(date: Calendar.current.date(byAdding: .day, value: -4, to: Date())!,
-                                      distance: 6.5, duration: 2200)
-        let session5 = RunningSession(date: Calendar.current.date(byAdding: .day, value: -5, to: Date())!,
-                                      distance: 4.3, duration: 1900)
-        let session6 = RunningSession(date: Calendar.current.date(byAdding: .day, value: -6, to: Date())!,
-                                      distance: 8.1, duration: 2500)
-        let session7 = RunningSession(date: Calendar.current.date(byAdding: .day, value: -7, to: Date())!,
-                                      distance: 10.0, duration: 3600)
         
-        self.runningSessions = [session1, session2, session3, session4, session5, session6, session7]
+        self.runningSessions = [session1, session2, session3]
     }
     
     private func calculateAverageDistance(for segment: Int) -> Observable<Double> {
